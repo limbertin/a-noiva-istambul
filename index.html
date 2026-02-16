@@ -1,0 +1,1951 @@
+<html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Noiva de Istambul - Rastreador de Episódios</title>
+    
+<style>:root { --color-primary: #c41e3a; --color-primary-dark: #a01730; --color-bg: #1a1a2e; --color-surface: #16213e; --color-card: #0f3460; --color-text: #e8e8e8; --color-text-secondary: #a8a8a8; --color-watched: #2ecc71; --color-current: #f39c12; }
+
+* { margin: 0px; padding: 0px; box-sizing: border-box; }
+
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-surface) 100%); color: var(--color-text); min-height: 100vh; padding: 20px; }
+
+.container { max-width: 800px; margin: 0px auto; }
+
+header { text-align: center; margin-bottom: 30px; padding: 20px; background: var(--color-surface); border-radius: 15px; box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 20px; }
+
+h1 { font-size: 2rem; color: var(--color-primary); margin-bottom: 10px; }
+
+.subtitle { color: var(--color-text-secondary); font-size: 0.9rem; }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px; }
+
+.stat-card { background: var(--color-card); padding: 20px; border-radius: 12px; text-align: center; box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 10px; }
+
+.stat-number { font-size: 2rem; font-weight: bold; color: var(--color-primary); margin-bottom: 5px; }
+
+.stat-label { font-size: 0.85rem; color: var(--color-text-secondary); text-transform: uppercase; }
+
+.progress-container { background: var(--color-surface); padding: 20px; border-radius: 12px; margin-bottom: 25px; box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 10px; }
+
+.progress-label { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; }
+
+.progress-bar-bg { background: var(--color-card); height: 30px; border-radius: 15px; overflow: hidden; box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 5px inset; }
+
+.progress-bar { height: 100%; background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-current) 100%); transition: width 0.5s; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.9rem; }
+
+.controls { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
+
+.btn { flex: 1 1 0%; min-width: 150px; padding: 12px 20px; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: 0.3s; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+
+.btn-primary { background: var(--color-primary); color: white; }
+
+.btn-primary:hover { background: var(--color-primary-dark); transform: translateY(-2px); box-shadow: rgba(196, 30, 58, 0.4) 0px 4px 15px; }
+
+.btn-secondary { background: var(--color-card); color: var(--color-text); }
+
+.btn-secondary:hover { background: rgb(26, 77, 122); transform: translateY(-2px); }
+
+.episodes-container { background: var(--color-surface); padding: 20px; border-radius: 12px; box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 10px; }
+
+.episodes-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+
+.episodes-title { font-size: 1.3rem; color: var(--color-text); }
+
+.search-box { padding: 8px 15px; border: 2px solid var(--color-card); border-radius: 8px; background: var(--color-bg); color: var(--color-text); font-size: 0.9rem; width: 150px; }
+
+.search-box:focus { outline: none; border-color: var(--color-primary); }
+
+.episodes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; max-height: 600px; overflow-y: auto; padding: 10px; }
+
+.episodes-grid::-webkit-scrollbar { width: 8px; }
+
+.episodes-grid::-webkit-scrollbar-track { background: var(--color-card); border-radius: 10px; }
+
+.episodes-grid::-webkit-scrollbar-thumb { background: var(--color-primary); border-radius: 10px; }
+
+.episode-card { background: var(--color-card); padding: 15px; border-radius: 10px; text-align: center; cursor: pointer; transition: 0.3s; border: 2px solid transparent; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
+
+.episode-card:hover { transform: translateY(-3px); box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 15px; }
+
+.episode-info { flex: 1 1 0%; display: flex; flex-direction: column; justify-content: center; margin-bottom: 8px; }
+
+.episode-youtube-btn { background: rgb(255, 0, 0); color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: auto; }
+
+.episode-youtube-btn:hover { background: rgb(204, 0, 0); transform: scale(1.05); }
+
+.episode-youtube-btn:active { transform: scale(0.95); }
+
+.episode-card.watched { background: var(--color-watched); color: white; border-color: rgb(39, 174, 96); }
+
+.episode-card.current { border-color: var(--color-current); box-shadow: rgba(243, 156, 18, 0.4) 0px 0px 20px; }
+
+.episode-number { font-size: 1.5rem; font-weight: bold; margin-bottom: 5px; }
+
+.episode-label { font-size: 0.75rem; opacity: 0.8; }
+
+.checkmark { position: absolute; top: 5px; right: 5px; font-size: 1.2rem; }
+
+.next-badge { position: absolute; top: -5px; left: 50%; transform: translateX(-50%); background: var(--color-current); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: bold; }
+
+@media (max-width: 600px) {
+  h1 { font-size: 1.5rem; }
+  .episodes-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); }
+  .btn { min-width: 100px; padding: 10px 15px; font-size: 0.85rem; }
+}
+</style></head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌙 A Noiva de Istambul</h1>
+            <p class="subtitle">Rastreador de Episódios</p>
+        </header>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="watchedCount">0</div>
+                <div class="stat-label">Assistidos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="remainingCount">207</div>
+                <div class="stat-label">Restantes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="nextEpisode">1</div>
+                <div class="stat-label">Próximo</div>
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-label">
+                <span>Progresso Geral</span>
+                <span id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar" id="progressBar" style="width: 0%">0%</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <a href="https://youtube.com/playlist?list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&amp;si=OH-DPvue7its-P_I" target="_blank" class="btn btn-primary">
+                ▶️ Abrir Playlist
+            </a>
+            <button class="btn btn-secondary">
+                🔄 Reiniciar
+            </button>
+            <button class="btn btn-secondary">
+                ✅ Marcar até...
+            </button>
+        </div>
+
+        <div class="episodes-container">
+            <div class="episodes-header">
+                <h2 class="episodes-title">Episódios</h2>
+                <input type="number" class="search-box" placeholder="Ir para..." id="jumpTo" min="1" max="207">
+            </div>
+            <div class="episodes-grid" id="episodesGrid"><div class="episode-card current" id="episode-1"><div class="next-badge">PRÓXIMO</div>
+                    <div class="episode-info">
+                        <div class="episode-number">1</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-2">
+                    <div class="episode-info">
+                        <div class="episode-number">2</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-3">
+                    <div class="episode-info">
+                        <div class="episode-number">3</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-4">
+                    <div class="episode-info">
+                        <div class="episode-number">4</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-5">
+                    <div class="episode-info">
+                        <div class="episode-number">5</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-6">
+                    <div class="episode-info">
+                        <div class="episode-number">6</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-7">
+                    <div class="episode-info">
+                        <div class="episode-number">7</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-8">
+                    <div class="episode-info">
+                        <div class="episode-number">8</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-9">
+                    <div class="episode-info">
+                        <div class="episode-number">9</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-10">
+                    <div class="episode-info">
+                        <div class="episode-number">10</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-11">
+                    <div class="episode-info">
+                        <div class="episode-number">11</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-12">
+                    <div class="episode-info">
+                        <div class="episode-number">12</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-13">
+                    <div class="episode-info">
+                        <div class="episode-number">13</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-14">
+                    <div class="episode-info">
+                        <div class="episode-number">14</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-15">
+                    <div class="episode-info">
+                        <div class="episode-number">15</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-16">
+                    <div class="episode-info">
+                        <div class="episode-number">16</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-17">
+                    <div class="episode-info">
+                        <div class="episode-number">17</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-18">
+                    <div class="episode-info">
+                        <div class="episode-number">18</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-19">
+                    <div class="episode-info">
+                        <div class="episode-number">19</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-20">
+                    <div class="episode-info">
+                        <div class="episode-number">20</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-21">
+                    <div class="episode-info">
+                        <div class="episode-number">21</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-22">
+                    <div class="episode-info">
+                        <div class="episode-number">22</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-23">
+                    <div class="episode-info">
+                        <div class="episode-number">23</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-24">
+                    <div class="episode-info">
+                        <div class="episode-number">24</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-25">
+                    <div class="episode-info">
+                        <div class="episode-number">25</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-26">
+                    <div class="episode-info">
+                        <div class="episode-number">26</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-27">
+                    <div class="episode-info">
+                        <div class="episode-number">27</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-28">
+                    <div class="episode-info">
+                        <div class="episode-number">28</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-29">
+                    <div class="episode-info">
+                        <div class="episode-number">29</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-30">
+                    <div class="episode-info">
+                        <div class="episode-number">30</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-31">
+                    <div class="episode-info">
+                        <div class="episode-number">31</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-32">
+                    <div class="episode-info">
+                        <div class="episode-number">32</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-33">
+                    <div class="episode-info">
+                        <div class="episode-number">33</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-34">
+                    <div class="episode-info">
+                        <div class="episode-number">34</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-35">
+                    <div class="episode-info">
+                        <div class="episode-number">35</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-36">
+                    <div class="episode-info">
+                        <div class="episode-number">36</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-37">
+                    <div class="episode-info">
+                        <div class="episode-number">37</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-38">
+                    <div class="episode-info">
+                        <div class="episode-number">38</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-39">
+                    <div class="episode-info">
+                        <div class="episode-number">39</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-40">
+                    <div class="episode-info">
+                        <div class="episode-number">40</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-41">
+                    <div class="episode-info">
+                        <div class="episode-number">41</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-42">
+                    <div class="episode-info">
+                        <div class="episode-number">42</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-43">
+                    <div class="episode-info">
+                        <div class="episode-number">43</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-44">
+                    <div class="episode-info">
+                        <div class="episode-number">44</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-45">
+                    <div class="episode-info">
+                        <div class="episode-number">45</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-46">
+                    <div class="episode-info">
+                        <div class="episode-number">46</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-47">
+                    <div class="episode-info">
+                        <div class="episode-number">47</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-48">
+                    <div class="episode-info">
+                        <div class="episode-number">48</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-49">
+                    <div class="episode-info">
+                        <div class="episode-number">49</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-50">
+                    <div class="episode-info">
+                        <div class="episode-number">50</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-51">
+                    <div class="episode-info">
+                        <div class="episode-number">51</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-52">
+                    <div class="episode-info">
+                        <div class="episode-number">52</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-53">
+                    <div class="episode-info">
+                        <div class="episode-number">53</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-54">
+                    <div class="episode-info">
+                        <div class="episode-number">54</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-55">
+                    <div class="episode-info">
+                        <div class="episode-number">55</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-56">
+                    <div class="episode-info">
+                        <div class="episode-number">56</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-57">
+                    <div class="episode-info">
+                        <div class="episode-number">57</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-58">
+                    <div class="episode-info">
+                        <div class="episode-number">58</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-59">
+                    <div class="episode-info">
+                        <div class="episode-number">59</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-60">
+                    <div class="episode-info">
+                        <div class="episode-number">60</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-61">
+                    <div class="episode-info">
+                        <div class="episode-number">61</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-62">
+                    <div class="episode-info">
+                        <div class="episode-number">62</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-63">
+                    <div class="episode-info">
+                        <div class="episode-number">63</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-64">
+                    <div class="episode-info">
+                        <div class="episode-number">64</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-65">
+                    <div class="episode-info">
+                        <div class="episode-number">65</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-66">
+                    <div class="episode-info">
+                        <div class="episode-number">66</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-67">
+                    <div class="episode-info">
+                        <div class="episode-number">67</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-68">
+                    <div class="episode-info">
+                        <div class="episode-number">68</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-69">
+                    <div class="episode-info">
+                        <div class="episode-number">69</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-70">
+                    <div class="episode-info">
+                        <div class="episode-number">70</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-71">
+                    <div class="episode-info">
+                        <div class="episode-number">71</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-72">
+                    <div class="episode-info">
+                        <div class="episode-number">72</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-73">
+                    <div class="episode-info">
+                        <div class="episode-number">73</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-74">
+                    <div class="episode-info">
+                        <div class="episode-number">74</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-75">
+                    <div class="episode-info">
+                        <div class="episode-number">75</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-76">
+                    <div class="episode-info">
+                        <div class="episode-number">76</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-77">
+                    <div class="episode-info">
+                        <div class="episode-number">77</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-78">
+                    <div class="episode-info">
+                        <div class="episode-number">78</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-79">
+                    <div class="episode-info">
+                        <div class="episode-number">79</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-80">
+                    <div class="episode-info">
+                        <div class="episode-number">80</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-81">
+                    <div class="episode-info">
+                        <div class="episode-number">81</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-82">
+                    <div class="episode-info">
+                        <div class="episode-number">82</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-83">
+                    <div class="episode-info">
+                        <div class="episode-number">83</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-84">
+                    <div class="episode-info">
+                        <div class="episode-number">84</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-85">
+                    <div class="episode-info">
+                        <div class="episode-number">85</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-86">
+                    <div class="episode-info">
+                        <div class="episode-number">86</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-87">
+                    <div class="episode-info">
+                        <div class="episode-number">87</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-88">
+                    <div class="episode-info">
+                        <div class="episode-number">88</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-89">
+                    <div class="episode-info">
+                        <div class="episode-number">89</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-90">
+                    <div class="episode-info">
+                        <div class="episode-number">90</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-91">
+                    <div class="episode-info">
+                        <div class="episode-number">91</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-92">
+                    <div class="episode-info">
+                        <div class="episode-number">92</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-93">
+                    <div class="episode-info">
+                        <div class="episode-number">93</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-94">
+                    <div class="episode-info">
+                        <div class="episode-number">94</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-95">
+                    <div class="episode-info">
+                        <div class="episode-number">95</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-96">
+                    <div class="episode-info">
+                        <div class="episode-number">96</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-97">
+                    <div class="episode-info">
+                        <div class="episode-number">97</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-98">
+                    <div class="episode-info">
+                        <div class="episode-number">98</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-99">
+                    <div class="episode-info">
+                        <div class="episode-number">99</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-100">
+                    <div class="episode-info">
+                        <div class="episode-number">100</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-101">
+                    <div class="episode-info">
+                        <div class="episode-number">101</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-102">
+                    <div class="episode-info">
+                        <div class="episode-number">102</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-103">
+                    <div class="episode-info">
+                        <div class="episode-number">103</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-104">
+                    <div class="episode-info">
+                        <div class="episode-number">104</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-105">
+                    <div class="episode-info">
+                        <div class="episode-number">105</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-106">
+                    <div class="episode-info">
+                        <div class="episode-number">106</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-107">
+                    <div class="episode-info">
+                        <div class="episode-number">107</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-108">
+                    <div class="episode-info">
+                        <div class="episode-number">108</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-109">
+                    <div class="episode-info">
+                        <div class="episode-number">109</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-110">
+                    <div class="episode-info">
+                        <div class="episode-number">110</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-111">
+                    <div class="episode-info">
+                        <div class="episode-number">111</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-112">
+                    <div class="episode-info">
+                        <div class="episode-number">112</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-113">
+                    <div class="episode-info">
+                        <div class="episode-number">113</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-114">
+                    <div class="episode-info">
+                        <div class="episode-number">114</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-115">
+                    <div class="episode-info">
+                        <div class="episode-number">115</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-116">
+                    <div class="episode-info">
+                        <div class="episode-number">116</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-117">
+                    <div class="episode-info">
+                        <div class="episode-number">117</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-118">
+                    <div class="episode-info">
+                        <div class="episode-number">118</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-119">
+                    <div class="episode-info">
+                        <div class="episode-number">119</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-120">
+                    <div class="episode-info">
+                        <div class="episode-number">120</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-121">
+                    <div class="episode-info">
+                        <div class="episode-number">121</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-122">
+                    <div class="episode-info">
+                        <div class="episode-number">122</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-123">
+                    <div class="episode-info">
+                        <div class="episode-number">123</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-124">
+                    <div class="episode-info">
+                        <div class="episode-number">124</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-125">
+                    <div class="episode-info">
+                        <div class="episode-number">125</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-126">
+                    <div class="episode-info">
+                        <div class="episode-number">126</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-127">
+                    <div class="episode-info">
+                        <div class="episode-number">127</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-128">
+                    <div class="episode-info">
+                        <div class="episode-number">128</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-129">
+                    <div class="episode-info">
+                        <div class="episode-number">129</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-130">
+                    <div class="episode-info">
+                        <div class="episode-number">130</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-131">
+                    <div class="episode-info">
+                        <div class="episode-number">131</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-132">
+                    <div class="episode-info">
+                        <div class="episode-number">132</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-133">
+                    <div class="episode-info">
+                        <div class="episode-number">133</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-134">
+                    <div class="episode-info">
+                        <div class="episode-number">134</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-135">
+                    <div class="episode-info">
+                        <div class="episode-number">135</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-136">
+                    <div class="episode-info">
+                        <div class="episode-number">136</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-137">
+                    <div class="episode-info">
+                        <div class="episode-number">137</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-138">
+                    <div class="episode-info">
+                        <div class="episode-number">138</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-139">
+                    <div class="episode-info">
+                        <div class="episode-number">139</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-140">
+                    <div class="episode-info">
+                        <div class="episode-number">140</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-141">
+                    <div class="episode-info">
+                        <div class="episode-number">141</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-142">
+                    <div class="episode-info">
+                        <div class="episode-number">142</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-143">
+                    <div class="episode-info">
+                        <div class="episode-number">143</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-144">
+                    <div class="episode-info">
+                        <div class="episode-number">144</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-145">
+                    <div class="episode-info">
+                        <div class="episode-number">145</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-146">
+                    <div class="episode-info">
+                        <div class="episode-number">146</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-147">
+                    <div class="episode-info">
+                        <div class="episode-number">147</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-148">
+                    <div class="episode-info">
+                        <div class="episode-number">148</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-149">
+                    <div class="episode-info">
+                        <div class="episode-number">149</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-150">
+                    <div class="episode-info">
+                        <div class="episode-number">150</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-151">
+                    <div class="episode-info">
+                        <div class="episode-number">151</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-152">
+                    <div class="episode-info">
+                        <div class="episode-number">152</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-153">
+                    <div class="episode-info">
+                        <div class="episode-number">153</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-154">
+                    <div class="episode-info">
+                        <div class="episode-number">154</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-155">
+                    <div class="episode-info">
+                        <div class="episode-number">155</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-156">
+                    <div class="episode-info">
+                        <div class="episode-number">156</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-157">
+                    <div class="episode-info">
+                        <div class="episode-number">157</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-158">
+                    <div class="episode-info">
+                        <div class="episode-number">158</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-159">
+                    <div class="episode-info">
+                        <div class="episode-number">159</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-160">
+                    <div class="episode-info">
+                        <div class="episode-number">160</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-161">
+                    <div class="episode-info">
+                        <div class="episode-number">161</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-162">
+                    <div class="episode-info">
+                        <div class="episode-number">162</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-163">
+                    <div class="episode-info">
+                        <div class="episode-number">163</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-164">
+                    <div class="episode-info">
+                        <div class="episode-number">164</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-165">
+                    <div class="episode-info">
+                        <div class="episode-number">165</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-166">
+                    <div class="episode-info">
+                        <div class="episode-number">166</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-167">
+                    <div class="episode-info">
+                        <div class="episode-number">167</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-168">
+                    <div class="episode-info">
+                        <div class="episode-number">168</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-169">
+                    <div class="episode-info">
+                        <div class="episode-number">169</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-170">
+                    <div class="episode-info">
+                        <div class="episode-number">170</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-171">
+                    <div class="episode-info">
+                        <div class="episode-number">171</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-172">
+                    <div class="episode-info">
+                        <div class="episode-number">172</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-173">
+                    <div class="episode-info">
+                        <div class="episode-number">173</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-174">
+                    <div class="episode-info">
+                        <div class="episode-number">174</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-175">
+                    <div class="episode-info">
+                        <div class="episode-number">175</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-176">
+                    <div class="episode-info">
+                        <div class="episode-number">176</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-177">
+                    <div class="episode-info">
+                        <div class="episode-number">177</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-178">
+                    <div class="episode-info">
+                        <div class="episode-number">178</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-179">
+                    <div class="episode-info">
+                        <div class="episode-number">179</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-180">
+                    <div class="episode-info">
+                        <div class="episode-number">180</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-181">
+                    <div class="episode-info">
+                        <div class="episode-number">181</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-182">
+                    <div class="episode-info">
+                        <div class="episode-number">182</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-183">
+                    <div class="episode-info">
+                        <div class="episode-number">183</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-184">
+                    <div class="episode-info">
+                        <div class="episode-number">184</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-185">
+                    <div class="episode-info">
+                        <div class="episode-number">185</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-186">
+                    <div class="episode-info">
+                        <div class="episode-number">186</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-187">
+                    <div class="episode-info">
+                        <div class="episode-number">187</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-188">
+                    <div class="episode-info">
+                        <div class="episode-number">188</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-189">
+                    <div class="episode-info">
+                        <div class="episode-number">189</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-190">
+                    <div class="episode-info">
+                        <div class="episode-number">190</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-191">
+                    <div class="episode-info">
+                        <div class="episode-number">191</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-192">
+                    <div class="episode-info">
+                        <div class="episode-number">192</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-193">
+                    <div class="episode-info">
+                        <div class="episode-number">193</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-194">
+                    <div class="episode-info">
+                        <div class="episode-number">194</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-195">
+                    <div class="episode-info">
+                        <div class="episode-number">195</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-196">
+                    <div class="episode-info">
+                        <div class="episode-number">196</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-197">
+                    <div class="episode-info">
+                        <div class="episode-number">197</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-198">
+                    <div class="episode-info">
+                        <div class="episode-number">198</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-199">
+                    <div class="episode-info">
+                        <div class="episode-number">199</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-200">
+                    <div class="episode-info">
+                        <div class="episode-number">200</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-201">
+                    <div class="episode-info">
+                        <div class="episode-number">201</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-202">
+                    <div class="episode-info">
+                        <div class="episode-number">202</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-203">
+                    <div class="episode-info">
+                        <div class="episode-number">203</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-204">
+                    <div class="episode-info">
+                        <div class="episode-number">204</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-205">
+                    <div class="episode-info">
+                        <div class="episode-number">205</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-206">
+                    <div class="episode-info">
+                        <div class="episode-number">206</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div><div class="episode-card" id="episode-207">
+                    <div class="episode-info">
+                        <div class="episode-number">207</div>
+                        <div class="episode-label">Capítulo</div>
+                    </div>
+                    <button class="episode-youtube-btn">▶ YouTube</button>
+                    
+                </div></div>
+        </div>
+    </div>
+
+    
+
+
+
+
+<script>
+const EPISODE_LINKS = {
+    "1": "https://www.youtube.com/watch?v=7M9EQHUhq38&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=1&pp=iAQB",
+    "2": "https://www.youtube.com/watch?v=zsCBoyBPSX8&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=2&pp=iAQB",
+    "3": "https://www.youtube.com/watch?v=9606_LoXsIs&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=3&pp=iAQB",
+    "4": "https://www.youtube.com/watch?v=YgPrJ4_b5Ls&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=4&pp=iAQB",
+    "5": "https://www.youtube.com/watch?v=G0-g5CjJFzo&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=5&pp=iAQB",
+    "6": "https://www.youtube.com/watch?v=0S2hyn4OMk0&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=6&pp=iAQB",
+    "7": "https://www.youtube.com/watch?v=lNWg5_fclDY&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=7&pp=iAQB0gcJCYcKAYcqIYzv",
+    "8": "https://www.youtube.com/watch?v=xqyNrUbWn3o&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=8&pp=iAQB",
+    "9": "https://www.youtube.com/watch?v=bmLVoCRIbaI&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=9&pp=iAQB",
+    "10": "https://www.youtube.com/watch?v=V4JL-7tDKRM&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=10&pp=iAQB",
+    "11": "https://www.youtube.com/watch?v=zof-8-ZyUH8&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=11&pp=iAQB",
+    "12": "https://www.youtube.com/watch?v=zIeXSDNAJAo&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=12&pp=iAQB",
+    "13": "https://www.youtube.com/watch?v=7PiAii5iLII&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=13&pp=iAQB",
+    "14": "https://www.youtube.com/watch?v=SRZLajGcCkU&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=14&pp=iAQB",
+    "15": "https://www.youtube.com/watch?v=rXwWXJREyAE&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=15&pp=iAQB",
+    "16": "https://www.youtube.com/watch?v=Qb5L3Kfb76A&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=16&pp=iAQB",
+    "17": "https://www.youtube.com/watch?v=gAju0iOZQTs&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=17&pp=iAQB",
+    "18": "https://www.youtube.com/watch?v=CfM_b0D_blo&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=18&pp=iAQB",
+    "19": "https://www.youtube.com/watch?v=ruegnTdU8YU&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=19&pp=iAQB",
+    "20": "https://www.youtube.com/watch?v=nRKOWm4gFSg&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=20&pp=iAQB",
+    "21": "https://www.youtube.com/watch?v=OSRyITbVmzI&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=21&pp=iAQB",
+    "22": "https://www.youtube.com/watch?v=ao5e-_YTQVA&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=22&pp=iAQB0gcJCYcKAYcqIYzv",
+    "23": "https://www.youtube.com/watch?v=cLH7BpPbndk&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=23&pp=iAQB",
+    "24": "https://www.youtube.com/watch?v=I7vctv1vV7s&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=24&pp=iAQB",
+    "25": "https://www.youtube.com/watch?v=jR1X0BG6qnk&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=25&pp=iAQB",
+    "26": "https://www.youtube.com/watch?v=EimMYtUR1y8&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=26&pp=iAQB",
+    "27": "https://www.youtube.com/watch?v=W7KOI2ls0M4&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=27&pp=iAQB",
+    "28": "https://www.youtube.com/watch?v=lNjhFQlA3Cc&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=28&pp=iAQB",
+    "29": "https://www.youtube.com/watch?v=1rxERq60qmI&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=29&pp=iAQB",
+    "30": "https://www.youtube.com/watch?v=sR8lElftqg4&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=30&pp=iAQB",
+    "31": "https://www.youtube.com/watch?v=yGvYLXCyziM&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=31&pp=iAQB",
+    "32": "https://www.youtube.com/watch?v=VlzELMbHzU0&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=32&pp=iAQB",
+    "33": "https://www.youtube.com/watch?v=hsZyRX3KGrA&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=33&pp=iAQB",
+    "34": "https://www.youtube.com/watch?v=X6CWu2MlFEc&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=34&pp=iAQB",
+    "35": "https://www.youtube.com/watch?v=cJVth0TZkfY&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=35&pp=iAQB",
+    "36": "https://www.youtube.com/watch?v=a_u7NGHVhBo&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=36&pp=iAQB0gcJCYcKAYcqIYzv",
+    "37": "https://www.youtube.com/watch?v=QRkfBbCxmfg&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=37&pp=iAQB",
+    "38": "https://www.youtube.com/watch?v=e7bIf2QkA9s&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=38&pp=iAQB",
+    "39": "https://www.youtube.com/watch?v=t_p60ebHg1s&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=39&pp=iAQB",
+    "40": "https://www.youtube.com/watch?v=Pi3NGLunuCw&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=40&pp=iAQB",
+    "41": "https://www.youtube.com/watch?v=WxY_8qCIwLw&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=41&pp=iAQB",
+    "42": "https://www.youtube.com/watch?v=bxeU7Y3nEk4&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=42&pp=iAQB",
+    "43": "https://www.youtube.com/watch?v=1E6xIFI_ziU&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=43&pp=iAQB",
+    "44": "https://www.youtube.com/watch?v=2poMN7ldqS0&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=44&pp=iAQB",
+    "45": "https://www.youtube.com/watch?v=8JSuR6O6K3A&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=45&pp=iAQB",
+    "46": "https://www.youtube.com/watch?v=rc5XASYJqNI&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=46&pp=iAQB",
+    "47": "https://www.youtube.com/watch?v=pqitRIGNqoY&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=47&pp=iAQB",
+    "48": "https://www.youtube.com/watch?v=Vb4ilObs0OU&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=48&pp=iAQB",
+    "49": "https://www.youtube.com/watch?v=1qiVv4eFNQQ&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=49&pp=iAQB",
+    "50": "https://www.youtube.com/watch?v=oTz05NjrDB0&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=50&pp=iAQB",
+    "51": "https://www.youtube.com/watch?v=cq6PSHEOMa4&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=51&pp=iAQB",
+    "52": "https://www.youtube.com/watch?v=hsUqFp1zmPU&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=52&pp=iAQB",
+    "53": "https://www.youtube.com/watch?v=IeTknLuVg4I&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=53&pp=iAQB",
+    "54": "https://www.youtube.com/watch?v=X8K5TQkS2TM&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=54&pp=iAQB",
+    "55": "https://www.youtube.com/watch?v=8rD7yqH8hak&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=55&pp=iAQB0gcJCYcKAYcqIYzv",
+    "56": "https://www.youtube.com/watch?v=5_H9FZx67o4&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=56&pp=iAQB",
+    "57": "https://www.youtube.com/watch?v=hzXrXXF4KoU&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=57&pp=iAQB",
+    "58": "https://www.youtube.com/watch?v=i9apO9EfuDw&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=58&pp=iAQB",
+    "59": "https://www.youtube.com/watch?v=EyiEVMujfJg&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=59&pp=iAQB",
+    "60": "https://www.youtube.com/watch?v=gJr5WbX6jOM&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=60&pp=iAQB",
+    "61": "https://www.youtube.com/watch?v=-GcrKFENWmo&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=61&pp=iAQB",
+    "62": "https://www.youtube.com/watch?v=k0M1Xtxnr54&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=62&pp=iAQB",
+    "63": "https://www.youtube.com/watch?v=JTzkM252iDs&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=63&pp=iAQB",
+    "64": "https://www.youtube.com/watch?v=MG7j25PoH0o&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=64&pp=iAQB",
+    "65": "https://www.youtube.com/watch?v=PgoBoDCoWqI&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=65&pp=iAQB",
+    "66": "https://www.youtube.com/watch?v=zoNxbUoZo_0&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=66&pp=iAQB",
+    "67": "https://www.youtube.com/watch?v=uzQ12rO4I4Q&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=67&pp=iAQB",
+    "68": "https://www.youtube.com/watch?v=oi9ZN-fzTQE&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=68&pp=iAQB",
+    "69": "https://www.youtube.com/watch?v=BQAl5eKl6T8&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=69&pp=iAQB",
+    "70": "https://www.youtube.com/watch?v=3oXgT77IFac&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=70&pp=iAQB",
+    "71": "https://www.youtube.com/watch?v=eCXYNufkIMs&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=71&pp=iAQB",
+    "72": "https://www.youtube.com/watch?v=VHIuRrNa0EY&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=72&pp=iAQB",
+    "73": "https://www.youtube.com/watch?v=72zVZdM-CnQ&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=73&pp=iAQB",
+    "74": "https://www.youtube.com/watch?v=CyXpyYxyR_s&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=74&pp=iAQB",
+    "75": "https://www.youtube.com/watch?v=eR4ZgIUsXCM&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=75&pp=iAQB",
+    "76": "https://www.youtube.com/watch?v=8jhlVy-QZzY&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=76&pp=iAQB",
+    "77": "https://www.youtube.com/watch?v=2OiuLR3P6Vw&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=77&pp=iAQB0gcJCYcKAYcqIYzv",
+    "78": "https://www.youtube.com/watch?v=z3CvJpsUHFA&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=78&pp=iAQB",
+    "79": "https://www.youtube.com/watch?v=Mcu6UkwTxsI&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=79&pp=iAQB",
+    "80": "https://www.youtube.com/watch?v=oo5U0VyuiUA&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=80&pp=iAQB",
+    "81": "https://www.youtube.com/watch?v=pEWLmCqWZHw&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=81&pp=iAQB0gcJCYcKAYcqIYzv",
+    "82": "https://www.youtube.com/watch?v=msBJ6hy_-lg&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=82&pp=iAQB",
+    "83": "https://www.youtube.com/watch?v=UAb6b4iZ0Jw&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=83&pp=iAQB",
+    "84": "https://www.youtube.com/watch?v=7Ywj1Kn4Fc8&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=84&pp=iAQB",
+    "85": "https://www.youtube.com/watch?v=VJFyBqOvR8w&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=85&pp=iAQB",
+    "86": "https://www.youtube.com/watch?v=qtml6nD3CDk&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=86&pp=iAQB",
+    "87": "https://www.youtube.com/watch?v=851NajC5HLI&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=87&pp=iAQB",
+    "88": "https://www.youtube.com/watch?v=fFGr2DP7Yug&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=88&pp=iAQB",
+    "89": "https://www.youtube.com/watch?v=QdcdPvDbxqY&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=89&pp=iAQB0gcJCYcKAYcqIYzv",
+    "90": "https://www.youtube.com/watch?v=Bfgf2nHSodA&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=90&pp=iAQB",
+    "91": "https://www.youtube.com/watch?v=LoO511XTLhw&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=91&pp=iAQB",
+    "92": "https://www.youtube.com/watch?v=Fork_Qie2NY&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=92&pp=iAQB0gcJCYcKAYcqIYzv",
+    "93": "https://www.youtube.com/watch?v=Uld0MIfVwHo&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=93&pp=iAQB",
+    "94": "https://www.youtube.com/watch?v=M3f51mt6KUw&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=94&pp=iAQB",
+    "95": "https://www.youtube.com/watch?v=2gIHarfOyEg&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=95&pp=iAQB",
+    "96": "https://www.youtube.com/watch?v=bfIFxa4aUYA&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=96&pp=iAQB",
+    "97": "https://www.youtube.com/watch?v=vH_tJk45rHM&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=97&pp=iAQB",
+    "98": "https://www.youtube.com/watch?v=oUu7vsf3Xco&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=98&pp=iAQB",
+    "99": "https://www.youtube.com/watch?v=Lli7GLrv1K4&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=99&pp=iAQB",
+    "100": "https://www.youtube.com/watch?v=hX3-gIuqut8&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=100&pp=iAQB",
+    "101": "https://www.youtube.com/watch?v=A24aDnoZc6E&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=101",
+    "102": "https://www.youtube.com/watch?v=dk2TgiyonlU&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=102",
+    "103": "https://www.youtube.com/watch?v=mgXhU3m8h4w&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=103",
+    "104": "https://www.youtube.com/watch?v=vf_pWo7eiOs&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=104",
+    "105": "https://www.youtube.com/watch?v=bxXcfqP2fFM&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=105",
+    "106": "https://www.youtube.com/watch?v=UR0dp9nFrv0&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=106",
+    "107": "https://www.youtube.com/watch?v=e0CzLkzpHjU&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=107",
+    "108": "https://www.youtube.com/watch?v=pZsNwFfGhpE&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=108",
+    "109": "https://www.youtube.com/watch?v=7yhtd8HCmFg&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=109",
+    "110": "https://www.youtube.com/watch?v=hldP2U3n9_M&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=110",
+    "111": "https://www.youtube.com/watch?v=c5bL7dRImBA&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=111",
+    "112": "https://www.youtube.com/watch?v=4L6DgG0p2s0&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=112",
+    "113": "https://www.youtube.com/watch?v=R2mV18n5uGk&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=113",
+    "114": "https://www.youtube.com/watch?v=xK3BWlQ1fFc&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=114",
+    "115": "https://www.youtube.com/watch?v=ItQ1KxA-rL0&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=115",
+    "116": "https://www.youtube.com/watch?v=kugqzwYFrWM&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=116",
+    "117": "https://www.youtube.com/watch?v=L6lY0L9F05I&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=117",
+    "118": "https://www.youtube.com/watch?v=5WkUbTw-XuA&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=118",
+    "119": "https://www.youtube.com/watch?v=pkWAq9oYvZA&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=119",
+    "120": "https://www.youtube.com/watch?v=_eM9cFIwVJY&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=120",
+    "121": "https://www.youtube.com/watch?v=B-l5JjvUzpA&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=121",
+    "122": "https://www.youtube.com/watch?v=iodLGVyQ4H4&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=122",
+    "123": "https://www.youtube.com/watch?v=rGVkElcOwRw&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=123",
+    "124": "https://www.youtube.com/watch?v=H3R1yfiwGeo&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=124",
+    "125": "https://www.youtube.com/watch?v=B6D6w2qPo1o&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=125",
+    "126": "https://www.youtube.com/watch?v=UN3J7AxyDa8&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=126",
+    "127": "https://www.youtube.com/watch?v=9czqT6_6lAc&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=127",
+    "128": "https://www.youtube.com/watch?v=0M3llXqEBcQ&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=128",
+    "129": "https://www.youtube.com/watch?v=qL_z2RU5i-4&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=129",
+    "130": "https://www.youtube.com/watch?v=8EbWr6jto5Y&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=130",
+    "131": "https://www.youtube.com/watch?v=921tO4m10fs&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=131",
+    "132": "https://www.youtube.com/watch?v=s9v2bn-SIT8&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=132",
+    "133": "https://www.youtube.com/watch?v=EizTW7ivpDs&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=133",
+    "134": "https://www.youtube.com/watch?v=U6HXRz2g5cQ&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=134",
+    "135": "https://www.youtube.com/watch?v=rktqh3AXQpc&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=135",
+    "136": "https://www.youtube.com/watch?v=tI1BdF4ZHTk&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=136",
+    "137": "https://www.youtube.com/watch?v=zLZrG4Sg1mM&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=137",
+    "138": "https://www.youtube.com/watch?v=rN8wkb3WolM&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=138",
+    "139": "https://www.youtube.com/watch?v=4ZQeXlP3loI&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=139",
+    "140": "https://www.youtube.com/watch?v=tYlYr-dTlcg&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=140",
+    "141": "https://www.youtube.com/watch?v=iu5p7mg8g7I&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=141",
+    "142": "https://www.youtube.com/watch?v=7pQw1tg06og&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=142",
+    "143": "https://www.youtube.com/watch?v=DPidG_RHDwU&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=143",
+    "144": "https://www.youtube.com/watch?v=ux2Vf5SjoF0&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=144",
+    "145": "https://www.youtube.com/watch?v=f_5K0c1PUTo&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=145",
+    "146": "https://www.youtube.com/watch?v=1g7fvST8qQw&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=146",
+    "147": "https://www.youtube.com/watch?v=3c7c3sWc8jI&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=147",
+    "148": "https://www.youtube.com/watch?v=0u9k3Wcs4yE&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=148",
+    "149": "https://www.youtube.com/watch?v=Qw7bM8sraNQ&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=149",
+    "150": "https://www.youtube.com/watch?v=sv7q4qRkzXQ&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=150",
+    "151": "https://www.youtube.com/watch?v=2iXf0cGq1dU&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=151",
+    "152": "https://www.youtube.com/watch?v=8F4RZ8iEzhQ&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=152",
+    "153": "https://www.youtube.com/watch?v=1O9pRk8iGq4&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=153",
+    "154": "https://www.youtube.com/watch?v=cRU7a2o_7KQ&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=154",
+    "155": "https://www.youtube.com/watch?v=Fq2QkN8wOkg&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=155",
+    "156": "https://www.youtube.com/watch?v=Q8bF7p4o7Og&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=156",
+    "157": "https://www.youtube.com/watch?v=Qk8qV4zjW_8&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=157",
+    "158": "https://www.youtube.com/watch?v=7l1dO_QlCMg&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=158",
+    "159": "https://www.youtube.com/watch?v=Z3S1U0vGbf0&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=159",
+    "160": "https://www.youtube.com/watch?v=QqYdGAo6C1A&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=160",
+    "161": "https://www.youtube.com/watch?v=8CjH2e9A0s8&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=161",
+    "162": "https://www.youtube.com/watch?v=0QkHkXbTtCk&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=162",
+    "163": "https://www.youtube.com/watch?v=RZtExE6K7rA&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=163",
+    "164": "https://www.youtube.com/watch?v=6rLpwL2zSwo&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=164",
+    "165": "https://www.youtube.com/watch?v=3uGZ1Eo7fHg&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=165",
+    "166": "https://www.youtube.com/watch?v=ci5E4cJbQ4Y&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=166",
+    "167": "https://www.youtube.com/watch?v=6kRZf4c8S0I&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=167",
+    "168": "https://www.youtube.com/watch?v=2wHnWlC3v1E&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=168",
+    "169": "https://www.youtube.com/watch?v=9B4Gq7z2uQk&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=169",
+    "170": "https://www.youtube.com/watch?v=zS4tS5Zz3n4&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=170",
+    "171": "https://www.youtube.com/watch?v=fF1vD7dX4iM&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=171",
+    "172": "https://www.youtube.com/watch?v=5eFqv7lEwLc&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=172",
+    "173": "https://www.youtube.com/watch?v=1zMZCYF3u0Y&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=173",
+    "174": "https://www.youtube.com/watch?v=YfH3p5tT8uM&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=174",
+    "175": "https://www.youtube.com/watch?v=7u7oKXQf7uQ&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=175",
+    "176": "https://www.youtube.com/watch?v=kjP2pA1n4pM&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=176",
+    "177": "https://www.youtube.com/watch?v=Gm7gUeH2OeA&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=177",
+    "178": "https://www.youtube.com/watch?v=l2n3gdE6bCc&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=178",
+    "179": "https://www.youtube.com/watch?v=8lq9j8LgYV0&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=179",
+    "180": "https://www.youtube.com/watch?v=3pXG2Pd6e0Y&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=180",
+    "181": "https://www.youtube.com/watch?v=P3XvG5eZdRE&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=181",
+    "182": "https://www.youtube.com/watch?v=1R0fY7j2SxM&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=182",
+    "183": "https://www.youtube.com/watch?v=Df5Qj7Zt7SA&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=183",
+    "184": "https://www.youtube.com/watch?v=tF0XsK1jZ1Y&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=184",
+    "185": "https://www.youtube.com/watch?v=J7cN3d4U6oY&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=185",
+    "186": "https://www.youtube.com/watch?v=JQFj8yL7eFg&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=186",
+    "187": "https://www.youtube.com/watch?v=9CxxAqYt3nQ&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=187",
+    "188": "https://www.youtube.com/watch?v=t7y7vP4Qd2E&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=188",
+    "189": "https://www.youtube.com/watch?v=0p3wJb4dK4A&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=189",
+    "190": "https://www.youtube.com/watch?v=zN2eG9kWkPA&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=190",
+    "191": "https://www.youtube.com/watch?v=bI9u5YH7tBw&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=191",
+    "192": "https://www.youtube.com/watch?v=FlbB9JgHnLw&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=192",
+    "193": "https://www.youtube.com/watch?v=Uh7K6x3g7iY&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=193",
+    "194": "https://www.youtube.com/watch?v=nK3z4w5d5dQ&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=194",
+    "195": "https://www.youtube.com/watch?v=C9dJt7z3QW8&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=195",
+    "196": "https://www.youtube.com/watch?v=2P0GkW7tH5k&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=196",
+    "197": "https://www.youtube.com/watch?v=6p5vH3dZs6U&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=197",
+    "198": "https://www.youtube.com/watch?v=GIy9vWf3Wgk&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=198",
+    "199": "https://www.youtube.com/watch?v=I6L7Qxw3vY4&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=199",
+    "200": "https://www.youtube.com/watch?v=xQqK7G6P9uM&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=200",
+    "201": "https://www.youtube.com/watch?v=vdXlJ7dJXPE&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=201",
+    "202": "https://www.youtube.com/watch?v=O0N7B8o3q5Q&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=202",
+    "203": "https://www.youtube.com/watch?v=5wP9R3pG2lQ&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=203",
+    "204": "https://www.youtube.com/watch?v=9Cw8x7rH5jQ&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=204",
+    "205": "https://www.youtube.com/watch?v=gB7h4Yl2x6M&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=205",
+    "206": "https://www.youtube.com/watch?v=Ew0L5v2Qk3E&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=206",
+    "207": "https://www.youtube.com/watch?v=kZ9vBv4Yx1E&list=PLA2VFvkm6I872Rt1qWzkOZMaqNN2RE6g8&index=207"
+};
+
+const watchedCountEl = document.getElementById('watchedCount');
+const remainingCountEl = document.getElementById('remainingCount');
+const nextEpisodeEl = document.getElementById('nextEpisode');
+const progressPercentEl = document.getElementById('progressPercent');
+const progressBarEl = document.getElementById('progressBar');
+const jumpToInput = document.getElementById('jumpTo');
+
+let watchedEpisodes = JSON.parse(localStorage.getItem('watchedEpisodes')) || [];
+
+function updateStats() {
+    const total = 207;
+    const watchedCount = watchedEpisodes.length;
+    const remainingCount = total - watchedCount;
+    
+    if (watchedCountEl) watchedCountEl.textContent = watchedCount;
+    if (remainingCountEl) remainingCountEl.textContent = remainingCount;
+    
+    let next = 1;
+    for (let i = 1; i <= total; i++) {
+        if (!watchedEpisodes.includes(i)) {
+            next = i;
+            break;
+        }
+    }
+    if (nextEpisodeEl) nextEpisodeEl.textContent = next;
+    
+    const percent = Math.round((watchedCount / total) * 100);
+    if (progressPercentEl) progressPercentEl.textContent = percent + '%';
+    if (progressBarEl) {
+        progressBarEl.style.width = percent + '%';
+        progressBarEl.textContent = percent + '%';
+    }
+    
+    document.querySelectorAll('.episode-card').forEach(card => {
+        const id = parseInt(card.id.replace('episode-', ''));
+        card.classList.remove('watched', 'current');
+        
+        let check = card.querySelector('.checkmark');
+        let badge = card.querySelector('.next-badge');
+        
+        if (watchedEpisodes.includes(id)) {
+            card.classList.add('watched');
+            if (!check) {
+                check = document.createElement('div');
+                check.className = 'checkmark';
+                check.textContent = '✅';
+                card.appendChild(check);
+            }
+            if (badge) badge.remove();
+        } else {
+            if (check) check.remove();
+            if (id === next) {
+                card.classList.add('current');
+                if (!badge) {
+                    badge = document.createElement('div');
+                    badge.className = 'next-badge';
+                    badge.textContent = 'PRÓXIMO';
+                    card.prepend(badge);
+                }
+            } else {
+                if (badge) badge.remove();
+            }
+        }
+    });
+}
+
+document.addEventListener('click', (e) => {
+    const card = e.target.closest('.episode-card');
+    const youtubeBtn = e.target.closest('.episode-youtube-btn');
+    
+    if (youtubeBtn) {
+        e.stopPropagation();
+        const cardParent = youtubeBtn.closest('.episode-card');
+        const id = cardParent.id.replace('episode-', '');
+        const url = EPISODE_LINKS[id];
+        if (url) {
+            window.open(url, '_blank');
+        }
+        return;
+    }
+    
+    if (card) {
+        const id = parseInt(card.id.replace('episode-', ''));
+        if (watchedEpisodes.includes(id)) {
+            watchedEpisodes = watchedEpisodes.filter(exId => exId !== id);
+        } else {
+            watchedEpisodes.push(id);
+        }
+        localStorage.setItem('watchedEpisodes', JSON.stringify(watchedEpisodes));
+        updateStats();
+    }
+});
+
+document.querySelectorAll('.btn-secondary').forEach(btn => {
+    if (btn.textContent.includes('Reiniciar')) {
+        btn.onclick = (e) => {
+            e.preventDefault();
+            if (confirm('Tem certeza que deseja reiniciar todo o progresso?')) {
+                watchedEpisodes = [];
+                localStorage.setItem('watchedEpisodes', JSON.stringify(watchedEpisodes));
+                updateStats();
+            }
+        };
+    } else if (btn.textContent.includes('Marcar até...')) {
+        btn.onclick = (e) => {
+            e.preventDefault();
+            const upTo = prompt('Deseja marcar como assistido até qual capítulo? (1-207)');
+            const num = parseInt(upTo);
+            if (num >= 1 && num <= 207) {
+                watchedEpisodes = [];
+                for (let i = 1; i <= num; i++) {
+                    watchedEpisodes.push(i);
+                }
+                localStorage.setItem('watchedEpisodes', JSON.stringify(watchedEpisodes));
+                updateStats();
+            }
+        };
+    }
+});
+
+if (jumpToInput) {
+    jumpToInput.addEventListener('input', () => {
+        const val = jumpToInput.value;
+        if (val) {
+            const target = document.getElementById('episode-' + val);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                target.style.transition = '0.5s';
+                target.style.border = '2px solid yellow';
+                setTimeout(() => target.style.border = '2px solid transparent', 2000);
+            }
+        }
+    });
+}
+
+updateStats();
+</script>
+</body></html>
