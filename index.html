@@ -92,6 +92,70 @@ h1 { font-size: 2rem; color: var(--color-primary); margin-bottom: 10px; }
   .episodes-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); }
   .btn { min-width: 100px; padding: 10px 15px; font-size: 0.85rem; }
 }
+
+.info-details {
+    background: var(--color-surface);
+    border-radius: 12px;
+    margin-bottom: 25px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    border: 1px solid var(--color-card);
+}
+
+.info-details summary {
+    padding: 15px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--color-primary);
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.3s;
+}
+
+.info-details summary:hover {
+    background: rgba(196, 30, 58, 0.1);
+}
+
+.info-details summary::-webkit-details-marker {
+    display: none;
+}
+
+.info-content {
+    padding: 0 20px 20px 20px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+}
+
+.info-content p {
+    margin-bottom: 8px;
+}
+
+.playlist-mapping {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--color-card);
+}
+
+.playlist-mapping h4 {
+    margin-bottom: 10px;
+    color: var(--color-text);
+}
+
+.playlist-mapping ul {
+    list-style: none;
+}
+
+.playlist-mapping li {
+    margin-bottom: 5px;
+}
+
+.playlist-mapping li strong {
+    color: var(--color-current);
+}
+
 </style></head>
 <body>
     <div class="container">
@@ -99,6 +163,29 @@ h1 { font-size: 2rem; color: var(--color-primary); margin-bottom: 10px; }
             <h1>🌙 A Noiva de Istambul</h1>
             <p class="subtitle">Rastreador de Episódios</p>
         </header>
+
+        <details class="info-details">
+            <summary>ℹ️ Como estão ordenados os capítulos?</summary>
+            <div class="info-content">
+                <p>São 208 capítulos nesta Playlist</p>
+                <p>Dublada para o português do Brasil</p>
+                <p>Capítulos 01 e 37 (até o minuto 51:34) são os que estão disponíveis na NETFLIX</p>
+                <p>Os capítulos foram divididos, em no máximo 57 minutos, visando reduzir os cortes</p>
+                <p>Algumas intercorrências no áudio existem devido a intervenções do próprio YouTube</p>
+                
+                <div class="playlist-mapping">
+                    <h4>Veja como ficaram os capítulos nessa nova Playlist:</h4>
+                    <ul>
+                        <li><strong>Parte 01 a 04:</strong> está entre 01 e 38</li>
+                        <li><strong>Parte 05 a 08:</strong> está entre 39 e 76</li>
+                        <li><strong>Parte 09 a 11:</strong> está entre 77 e 114</li>
+                        <li><strong>Parte CORTADA:</strong> está entre 115 e 152</li>
+                        <li><strong>Parte 12 a 14:</strong> está entre 153 e 190</li>
+                        <li><strong>Parte 15 e 16:</strong> está entre 191 e 208</li>
+                    </ul>
+                </div>
+            </div>
+        </details>
 
         <div class="stats">
             <div class="stat-card">
